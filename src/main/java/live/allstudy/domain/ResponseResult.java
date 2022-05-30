@@ -11,11 +11,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ResponseResult<T> {
-
+    /**
+     * HTTP Status Codes
+     */
     private Integer code;
 
+    /**
+     * Response Msg to front-end
+     */
     private String msg;
 
+    /**
+     * The Data in the json
+     */
     private T data;
 
     public ResponseResult(Integer code, String msg){
