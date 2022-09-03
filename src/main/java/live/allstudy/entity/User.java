@@ -16,6 +16,10 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
+    private String email;
+    
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
