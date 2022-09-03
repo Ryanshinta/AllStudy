@@ -1,6 +1,9 @@
-RUN bash -c "sdk install java 17.0.3-ms && \
-    sdk default java 17.0.3-ms"
-
 FROM gitpod/workspace-full
+
+RUN sudo apt-get update \
+ && sudo apt-get install -y \
+    tool \
+ && sudo rm -rf /var/lib/apt/lists/*
+ 
 FROM gitpod/workspace-mysql
 
