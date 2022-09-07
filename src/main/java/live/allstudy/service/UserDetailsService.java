@@ -1,16 +1,20 @@
-package live.allstudy.service;
+// package live.allstudy.service;
 
-import java.util.List;
+// import java.util.List;
 
-import live.allstudy.entity.User;
+// import org.springframework.stereotype.Service;
 
-public interface UserDetailsService {
-    User saveUser(User user);
+// import live.allstudy.entity.User;
 
-    List<User> getAllUser();
+
+// @Service
+// public interface UserDetailsService {
+//     User saveUser(User user);
+
+//     List<User> getAllUser();
     
-    User updateUserById(User user, Long id);
+//     User updateUserById(User user, Long id);
 
-    void deleteUserById(Long id);
+//     void deleteUserById(Long id);
     
-}
+// }

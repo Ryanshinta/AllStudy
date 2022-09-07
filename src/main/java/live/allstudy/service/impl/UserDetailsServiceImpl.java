@@ -1,43 +1,44 @@
-package live.allstudy.service.impl;
+// package live.allstudy.service.impl;
 
-import java.util.List;
-import java.util.Optional;
+// import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
-import live.allstudy.entity.User;
-import live.allstudy.repository.UserRepository;
-import live.allstudy.service.UserDetailsService;
+// import live.allstudy.entity.User;
+// import live.allstudy.repository.UserRepository;
+// import live.allstudy.service.UserDetailsService;
 
-public class UserDetailsServiceImpl implements UserDetailsService{
+// @Service
+// public class UserDetailsServiceImpl implements UserDetailsService{
 
 
-    @Autowired
-    private UserRepository userRepository;
+//     @Autowired
+//     private UserRepository userRepository;
 
-    @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
+//     @Override
+//     public User saveUser(User user) {
+//         return userRepository.save(user);
+//     }
 
-    @Override
-    public List<User> getAllUser() {
-        return userRepository.findAll();
-    }
+//     @Override
+//     public List<User> getAllUser() {
+//         return userRepository.findAll();
+//     }
 
-    @Override
-    public User updateUserById(User user, Long id) {
-        User userDB = userRepository.findById(id).get();
+//     @Override
+//     public User updateUserById(User user, Long id) {
+//         User userDB = userRepository.findById(id).get();
         
-        //todo One by one save updated data into class
-        return userRepository.save(user);
+//         //todo One by one save updated data into class
+//         return userRepository.save(user);
     
-    }
+//     }
 
-    @Override
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
+//     @Override
+//     public void deleteUserById(Long id) {
+//         userRepository.deleteById(id);
         
-    }
+//     }
     
-}
+// }
