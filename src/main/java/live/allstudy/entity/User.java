@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.lang.Nullable;
 
 import java.util.Date;
@@ -17,7 +18,7 @@ import java.util.Date;
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -35,6 +36,6 @@ public class User {
     @CreatedDate
     private Date create_time;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     private Date update_time;
 }

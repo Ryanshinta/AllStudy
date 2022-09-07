@@ -1,6 +1,7 @@
 package live.allstudy.controller;
 
 
+import live.allstudy.dto.registerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class RegisterController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User registerUser){
+    public ResponseEntity<?> registerUser(@RequestBody registerDto registerUser){
         
         if(userRepository.existsByEmail(registerUser.getEmail())){
             return new ResponseEntity<>("Email is already taken!",HttpStatus.BAD_REQUEST);
