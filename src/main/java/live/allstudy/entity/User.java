@@ -36,6 +36,6 @@ public class User {
     @CreatedDate
     private Date create_time;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     private Date update_time;
 }
