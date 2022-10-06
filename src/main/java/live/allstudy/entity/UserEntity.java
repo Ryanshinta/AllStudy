@@ -9,18 +9,20 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.lang.Nullable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    private String id;
 
     private String email;
 
@@ -32,6 +34,8 @@ public class User {
 
     private boolean status;
 
+    private String role;
+
     private String avatar;
 
     @Column(updatable = false)
@@ -40,4 +44,5 @@ public class User {
 
     @UpdateTimestamp
     private Date update_time;
+
 }
