@@ -38,13 +38,7 @@ public class UserEntity {
 
     private String password;
 
-    private String token;
-
-    private boolean status;
-
     private String role;
-
-    private String avatar;
 
     @Column(updatable = false)
     @CreatedDate
