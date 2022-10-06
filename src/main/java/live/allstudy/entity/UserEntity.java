@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -40,8 +41,9 @@ public class UserEntity {
 
     private String role;
 
+
+    @CreationTimestamp
     @Column(updatable = false)
-    @CreatedDate
     private Date create_time;
 
     @UpdateTimestamp

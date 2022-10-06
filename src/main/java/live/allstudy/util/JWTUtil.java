@@ -20,7 +20,7 @@ public class JWTUtil {
     private String secretKey;
 
     public String generateToken(String subject) {
-        return Jwts.builder().setIssuer("PSN").setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        return Jwts.builder().setIssuer("allstudy").setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(24)))
                 .signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encode(secretKey.getBytes())).compact();
     }
@@ -50,4 +50,18 @@ public class JWTUtil {
         return getClaims(token).getSubject();
     }
 
+
+//    public static void main(String[] args) {
+//        String id = "123456";
+//
+//        JWTUtil jwtUtil = new JWTUtil();
+//        jwtUtil.secretKey = "test";
+//        String s = jwtUtil.generateToken(id);
+//        System.out.println(s);
+//
+//        System.out.println(jwtUtil.getClaims(s));
+//    }
 }
+
+
+
