@@ -14,6 +14,7 @@ import org.springframework.lang.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -31,7 +32,7 @@ public class UserEntity {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid",strategy = "uuid2")
     @Column(name = "id", nullable = false)
-    private String id;
+    private UUID id;
 
     private String email;
 

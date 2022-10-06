@@ -3,9 +3,9 @@ package live.allstudy.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table(name = "post")
 public class PostEntity {
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     private String userId;
 
@@ -28,9 +32,9 @@ public class PostEntity {
 
     private Instant createdAt;
 
-    List<String> love = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    List<LikeEntity> like;
 
-    List<String> share = new ArrayList<>();
-
-    List<CommentEntity> comment = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    List<CommentEntity> comment;
 }
