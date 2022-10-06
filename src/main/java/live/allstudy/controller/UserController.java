@@ -1,5 +1,6 @@
 package live.allstudy.controller;
 
+import live.allstudy.dto.UserIDDTO;
 import live.allstudy.dto.UserSignInDTO;
 import live.allstudy.entity.AuthorizedEntity;
 import live.allstudy.entity.UserEntity;
@@ -42,8 +43,8 @@ public class UserController {
     }
 
     @PostMapping("/users/profile")
-    public ResponseEntity<ResponseClass> findById(@RequestBody String inputId) {
-        return new ResponseEntity<ResponseClass>(userService.findById(inputId), HttpStatus.OK);
+    public ResponseEntity<ResponseClass> findById(@RequestBody UserIDDTO inputId) {
+        return new ResponseEntity<ResponseClass>(userService.findById(inputId.getId()), HttpStatus.OK);
     }
 
 
