@@ -32,7 +32,7 @@ public class UserEntity {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid",strategy = "uuid2")
     @Column(name = "id", nullable = false)
-    private UUID id;
+    private String id;
 
     private String email;
 
