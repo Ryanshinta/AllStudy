@@ -42,7 +42,6 @@ public class UserEntity {
 
     private String role;
 
-
     @CreationTimestamp
     @Column(updatable = false)
     private Date create_time;

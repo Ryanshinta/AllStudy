@@ -1,9 +1,11 @@
 package live.allstudy.service;
 
 
+import live.allstudy.entity.UserConnectionEntity;
 import live.allstudy.entity.UserEntity;
+import live.allstudy.repository.UserConnectionRepository;
 import live.allstudy.repository.UserRepository;
-import live.allstudy.util.ResponseClass;
+import live.allstudy.util.ResponseObj;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +24,9 @@ import java.util.*;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private UserConnectionRepository userConnRepo;
 
     @Autowired
     private BCryptPasswordEncoder bCryptEncoder;
@@ -43,16 +48,16 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public ResponseClass findAll() {
-        ResponseClass responseObj = new ResponseClass();
+    public ResponseObj findAll() {
+        ResponseObj responseObj = new ResponseObj();
         responseObj.setPayload(userRepo.findAll());
         responseObj.setStatus("success");
         responseObj.setMessage("success");
         return responseObj;
     }
 
-    public ResponseClass findById(String id) {
-        ResponseClass responseObj = new ResponseClass();
+    public ResponseObj findById(String id) {
+        ResponseObj responseObj = new ResponseObj();
         Optional<UserEntity> optUser = userRepo.findById(id);
         if (optUser.isEmpty()) {
             responseObj.setStatus("fail");
@@ -66,8 +71,8 @@ public class UserService implements UserDetailsService {
         return responseObj;
     }
 
-    public ResponseClass saveUser(UserEntity inputUser) {
-        ResponseClass responseObj = new ResponseClass();
+    public ResponseObj saveUser(UserEntity inputUser) {
+        ResponseObj responseObj = new ResponseObj();
         Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getEmail());
         if (optUser.isPresent()) {
             responseObj.setStatus("fail");
@@ -77,11 +82,48 @@ public class UserService implements UserDetailsService {
         } else {
             inputUser.setPassword(bCryptEncoder.encode(inputUser.getPassword()));
             UserEntity user = userRepo.save(inputUser);
+            UserConnectionEntity userConnectionEntity = new UserConnectionEntity();
+            userConnectionEntity.setId(inputUser.getId());
+
+            userConnRepo.save(userConnectionEntity);
             responseObj.setPayload(user);
             responseObj.setStatus("success");
             responseObj.setMessage("success");
             return responseObj;
         }
+    }
+
+    public ResponseObj getALlFollowing(String id){
+        ResponseObj responseObj = new ResponseObj();
+        //Optional<UserEntity> optUser = userRepo.findById(id);
+        Optional<UserConnectionEntity> optUserConn = userConnRepo.findById(id);
+        if (optUserConn.get().getFollowing().isEmpty()){
+            responseObj.setStatus("fail");
+            responseObj.setMessage("user id: " + id + " not existed");
+            responseObj.setPayload(null);
+        }else {
+            List<String> followerIds = optUserConn.get().getFollower();
+            List<UserEntity> followerAccounts = new ArrayList<>();
+
+            if (followerIds.size() > 0) {
+                for (String followerId : followerIds) {
+                    Optional<UserEntity> optFollowerUser = userRepo.findById(followerId);
+                    if (optFollowerUser.isPresent()) {
+                        UserEntity followerUser = optFollowerUser.get();
+                        followerUser.setPassword("");
+                        followerAccounts.add(followerUser);
+                    }
+                }
+                responseObj.setStatus("success");
+                responseObj.setMessage("success");
+                responseObj.setPayload(followerAccounts);
+            } else {
+                responseObj.setStatus("fail");
+                responseObj.setMessage("User id " + id + " does not have any follower");
+                responseObj.setPayload(null);
+            }
+        }
+        return responseObj;
     }
 
 }

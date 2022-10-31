@@ -4,8 +4,7 @@ import live.allstudy.dto.UserIDDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.repository.PostRepository;
 import live.allstudy.repository.UserRepository;
-import live.allstudy.util.ResponseClass;
-import org.apache.commons.logging.Log;
+import live.allstudy.util.ResponseObj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,8 @@ public class PostService {
     private UserRepository userRepo;
 
 
-    public ResponseClass insertPost(PostEntity inputPost) {
-        ResponseClass responseObj = new ResponseClass();
+    public ResponseObj insertPost(PostEntity inputPost) {
+        ResponseObj responseObj = new ResponseObj();
         inputPost.setCreatedAt(Instant.now());
         responseObj.setStatus("success");
         responseObj.setMessage("success");
@@ -36,8 +35,8 @@ public class PostService {
         return responseObj;
     }
 
-    public ResponseClass findPostByUserId(UserIDDTO inputUserId) {
-        ResponseClass responseObj = new ResponseClass();
+    public ResponseObj findPostByUserId(UserIDDTO inputUserId) {
+        ResponseObj responseObj = new ResponseObj();
         Optional<List<PostEntity>> userPostsOpt = postRepo.findByUserIdOrderByCreatedAtDesc(inputUserId.getId());
         if (userPostsOpt.isEmpty()) {
             responseObj.setStatus("fail");
