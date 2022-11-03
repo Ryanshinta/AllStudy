@@ -50,4 +50,29 @@ public class CommentService {
             return responseObj;
         }
     }
+
+    public ResponseObj getComments(String inputPostId) {
+        ResponseObj responseObj = new ResponseObj();
+        Optional<PostEntity> optTargetPost = postRepo.findById(inputPostId);
+        if (optTargetPost.isEmpty()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("fail");
+            responseObj.setPayload(null);
+            return responseObj;
+        } else {
+            PostEntity targetPost = optTargetPost.get();
+            List<CommentEntity> commentList = targetPost.getComment();
+            if (commentList.size() > 0) {
+                responseObj.setStatus("success");
+                responseObj.setMessage("success");
+                responseObj.setPayload(commentList);
+                return responseObj;
+            } else {
+                responseObj.setStatus("success");
+                responseObj.setMessage("Post id " + inputPostId + " does not have any comment");
+                responseObj.setPayload(null);
+                return responseObj;
+            }
+        }
+    }
 }
