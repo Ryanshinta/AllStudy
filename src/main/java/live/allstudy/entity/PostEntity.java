@@ -3,10 +3,10 @@ package live.allstudy.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,6 @@ import java.util.List;
 public class PostEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     private String id;
 
     private String userId;
