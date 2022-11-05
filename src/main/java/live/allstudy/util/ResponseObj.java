@@ -1,15 +1,15 @@
 package live.allstudy.util;
 
-public class ResponseClass {
+public class ResponseObj {
     private String status;
     private String message;
     private Object payload;
-    public ResponseClass(String status, String message, Object payload) {
+    public ResponseObj(String status, String message, Object payload) {
         this.status = status;
         this.message = message;
         this.payload = payload;
     }
-    public ResponseClass() {
+    public ResponseObj() {
     }
     public String getStatus() {
         return status;
