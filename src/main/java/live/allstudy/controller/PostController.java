@@ -4,14 +4,11 @@ package live.allstudy.controller;
 import live.allstudy.dto.UserIDDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.service.PostService;
-import live.allstudy.util.ResponseClass;
+import live.allstudy.util.ResponseObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -19,14 +16,28 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/insertpost")
-    public ResponseEntity<ResponseClass> insertPost(@RequestBody PostEntity inputPost) {
-        return new ResponseEntity<ResponseClass>(postService.insertPost(inputPost), HttpStatus.OK);
+    @PostMapping("/insertPost")
+    public ResponseEntity<ResponseObj> insertPost(@RequestBody PostEntity inputPost) {
+        return new ResponseEntity<ResponseObj>(postService.insertPost(inputPost), HttpStatus.OK);
     }
 
-    @PostMapping("/myposts")
-    public ResponseEntity<ResponseClass> findPostByUserId(@RequestBody UserIDDTO inputUserId) {
-        return new ResponseEntity<ResponseClass>(postService.findPostByUserId(inputUserId), HttpStatus.OK);
+    @GetMapping("/myPosts")
+    public ResponseEntity<ResponseObj> findPostByUserId(@RequestBody UserIDDTO inputUserId) {
+        return new ResponseEntity<ResponseObj>(postService.findPostByUserId(inputUserId), HttpStatus.OK);
     }
 
+    @PostMapping("/followingPosts")
+    public ResponseEntity<ResponseObj> findPostByFollowing(@RequestBody UserIDDTO inputUserId) {
+        return new ResponseEntity<ResponseObj>(postService.findPostByFollowing(inputUserId), HttpStatus.OK);
+    }
+
+    @PostMapping("/likePost")
+    public ResponseEntity<ResponseObj> lovePost(@RequestBody UserIDDTO postId,@RequestBody UserIDDTO userID) {
+        return new ResponseEntity<ResponseObj>(postService.updatePostByLike(postId,userID), HttpStatus.OK);
+    }
+
+    @PostMapping("/sharePost")
+    public ResponseEntity<ResponseObj> sharePost(@RequestBody UserIDDTO postId,@RequestBody UserIDDTO userID) {
+        return new ResponseEntity<ResponseObj>(postService.updatePostByShare(postId,userID), HttpStatus.OK);
+    }
 }
