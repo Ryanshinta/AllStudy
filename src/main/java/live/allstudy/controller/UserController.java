@@ -57,6 +57,11 @@ public class UserController {
     public ResponseEntity<ResponseObj> userSignIn(@RequestBody UserSignInDTO inputUser) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputUser.getEmail(), inputUser.getPassword()));
+
+
+
+
+
             String token = jwtUtil.generateToken(inputUser.getEmail());
 
             Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getEmail());
@@ -64,6 +69,7 @@ public class UserController {
             user.setPassword("");
             return new ResponseEntity<ResponseObj>(new ResponseObj("success", "authenticated", new AuthorizedEntity(user, token)), HttpStatus.OK);
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
             return new ResponseEntity<ResponseObj>(new ResponseObj("fail", "unauthenticated", null), HttpStatus.OK);
         }
     }

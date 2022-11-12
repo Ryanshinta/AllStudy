@@ -10,11 +10,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class PostController {
     @Autowired
     private PostService postService;
+
+    @GetMapping("/getAllPost")
+    public ResponseEntity<ResponseObj> getAllPost(){
+        return new ResponseEntity<ResponseObj>(postService.getAllPost(),HttpStatus.OK);
+    }
 
     @PostMapping("/insertPost")
     public ResponseEntity<ResponseObj> insertPost(@RequestBody PostEntity inputPost) {

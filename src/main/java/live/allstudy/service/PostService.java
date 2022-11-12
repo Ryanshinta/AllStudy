@@ -26,6 +26,16 @@ public class PostService {
     @Autowired
     private UserRepository userRepo;
 
+    public ResponseObj getAllPost(){
+        ResponseObj responseObj = new ResponseObj();
+        Optional<List<PostEntity>> allPostOpt = postRepo.findAllByOrderByIdAsc();
+        List<PostEntity> allPosts = allPostOpt.get();
+        responseObj.setStatus("success");
+        responseObj.setMessage("success");
+        responseObj.setPayload(allPosts);
+        return responseObj;
+    }
+
     public ResponseObj insertPost(PostEntity inputPost) {
         ResponseObj responseObj = new ResponseObj();
         inputPost.setCreatedAt(Instant.now());
@@ -51,6 +61,7 @@ public class PostService {
             return responseObj;
         }
     }
+
 
     public ResponseObj findPostByFollowing(UserIDDTO inputUserId) {
         ResponseObj responseObj = new ResponseObj();
