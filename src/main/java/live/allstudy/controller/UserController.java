@@ -58,10 +58,6 @@ public class UserController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputUser.getEmail(), inputUser.getPassword()));
 
-
-
-
-
             String token = jwtUtil.generateToken(inputUser.getEmail());
 
             Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getEmail());

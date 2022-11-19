@@ -22,6 +22,8 @@ public class PostEntity {
 
     private String userId;
 
+    private String userName;
+
     private String originalUserId;
 
     private String content;
