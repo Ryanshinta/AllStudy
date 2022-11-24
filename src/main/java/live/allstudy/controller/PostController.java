@@ -2,6 +2,7 @@ package live.allstudy.controller;
 
 
 import live.allstudy.dto.UserEmailDTO;
+import live.allstudy.dto.UserIDDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.service.PostService;
 import live.allstudy.util.ResponseObj;
@@ -29,22 +30,22 @@ public class PostController {
     }
 
     @GetMapping("/myPosts")
-    public ResponseEntity<ResponseObj> findPostByUserId(@RequestBody UserEmailDTO inputUserId) {
+    public ResponseEntity<ResponseObj> findPostByUserId(@RequestBody UserIDDTO inputUserId) {
         return new ResponseEntity<ResponseObj>(postService.findPostByUserId(inputUserId), HttpStatus.OK);
     }
 
     @PostMapping("/followingPosts")
-    public ResponseEntity<ResponseObj> findPostByFollowing(@RequestBody UserEmailDTO inputUserId) {
+    public ResponseEntity<ResponseObj> findPostByFollowing(@RequestBody UserIDDTO inputUserId) {
         return new ResponseEntity<ResponseObj>(postService.findPostByFollowing(inputUserId), HttpStatus.OK);
     }
 
     @PostMapping("/likePost")
-    public ResponseEntity<ResponseObj> lovePost(@RequestBody UserEmailDTO postId, @RequestBody UserEmailDTO userID) {
+    public ResponseEntity<ResponseObj> lovePost(@RequestBody UserIDDTO postId, @RequestBody UserIDDTO userID) {
         return new ResponseEntity<ResponseObj>(postService.updatePostByLike(postId,userID), HttpStatus.OK);
     }
 
     @PostMapping("/sharePost")
-    public ResponseEntity<ResponseObj> sharePost(@RequestBody UserEmailDTO postId, @RequestBody UserEmailDTO userID) {
+    public ResponseEntity<ResponseObj> sharePost(@RequestBody UserIDDTO postId, @RequestBody UserIDDTO userID) {
         return new ResponseEntity<ResponseObj>(postService.updatePostByShare(postId,userID), HttpStatus.OK);
     }
 }
