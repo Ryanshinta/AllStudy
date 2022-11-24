@@ -14,13 +14,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collation = "post")
+@Document("post")
 public class PostEntity {
 
     @Id
     private String id;
 
     private String userId;
+
+    private String userName;
 
     private String originalUserId;
 

@@ -1,12 +1,14 @@
 package live.allstudy.service;
 
 import live.allstudy.dto.PostByFollowing;
-import live.allstudy.dto.UserEmailDTO;
+import live.allstudy.dto.UserIDDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.entity.UserEntity;
 import live.allstudy.repository.PostRepository;
 import live.allstudy.repository.UserRepository;
 import live.allstudy.util.ResponseObj;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,16 @@ public class PostService {
     @Autowired
     private UserRepository userRepo;
 
+    public ResponseObj getAllPost(){
+        ResponseObj responseObj = new ResponseObj();
+        Optional<List<PostEntity>> allPostOpt = postRepo.findAllByOrderByIdAsc();
+        List<PostEntity> allPosts = allPostOpt.get();
+        responseObj.setStatus("success");
+        responseObj.setMessage("success");
+        responseObj.setPayload(allPosts);
+        return responseObj;
+    }
+
     public ResponseObj insertPost(PostEntity inputPost) {
         ResponseObj responseObj = new ResponseObj();
         inputPost.setCreatedAt(Instant.now());
@@ -33,12 +45,12 @@ public class PostService {
         return responseObj;
     }
 
-    public ResponseObj findPostByUserId(UserEmailDTO inputUserId) {
+    public ResponseObj findPostByUserId(UserIDDTO inputUserId) {
         ResponseObj responseObj = new ResponseObj();
-        Optional<List<PostEntity>> userPostsOpt = postRepo.findByUserIdOrderByCreatedAtDesc(inputUserId.getEmail());
+        Optional<List<PostEntity>> userPostsOpt = postRepo.findByUserIdOrderByCreatedAtDesc(inputUserId.getId());
         if (userPostsOpt.isEmpty()) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("cannot find any post from user id: " + inputUserId.getEmail());
+            responseObj.setMessage("cannot find any post from user id: " + inputUserId.getId());
             responseObj.setPayload(null);
             return responseObj;
         } else {
@@ -50,12 +62,13 @@ public class PostService {
         }
     }
 
-    public ResponseObj findPostByFollowing(UserEmailDTO inputUserId) {
+
+    public ResponseObj findPostByFollowing(UserIDDTO inputUserId) {
         ResponseObj responseObj = new ResponseObj();
-        Optional<UserEntity> optUser = userRepo.findById(inputUserId.getEmail());
+        Optional<UserEntity> optUser = userRepo.findById(inputUserId.getId());
         if (optUser.isEmpty()) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("cannot find any post from user id: " + inputUserId.getEmail());
+            responseObj.setMessage("cannot find any post from user id: " + inputUserId.getId());
             responseObj.setPayload(null);
             return responseObj;
         } else {
@@ -97,7 +110,7 @@ public class PostService {
                 return responseObj;
             } else {
                 responseObj.setStatus("fail");
-                responseObj.setMessage("user id: " + inputUserId.getEmail() + " has empty following list");
+                responseObj.setMessage("user id: " + inputUserId.getId() + " has empty following list");
                 responseObj.setPayload(null);
                 return responseObj;
             }
@@ -122,13 +135,13 @@ public class PostService {
         }
     }
 
-    public ResponseObj updatePostByLike(UserEmailDTO postId, UserEmailDTO userID) {
+    public ResponseObj updatePostByLike(UserIDDTO postId,UserIDDTO userID) {
         // id 1 - post Id, id 2 - user who liked post
         ResponseObj responseObj = new ResponseObj();
-        Optional<PostEntity> optPost = postRepo.findById(postId.getEmail());
+        Optional<PostEntity> optPost = postRepo.findById(postId.getId());
         if (optPost.isEmpty()) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("cannot find post id: " + postId.getEmail());
+            responseObj.setMessage("cannot find post id: " + postId.getId());
             responseObj.setPayload(null);
             return responseObj;
         } else {
@@ -138,10 +151,10 @@ public class PostService {
                 loveList = new ArrayList<>();
             }
             // love and unlove a post
-            if (!loveList.contains(userID.getEmail())) {
-                loveList.add(userID.getEmail());
+            if (!loveList.contains(userID.getId())) {
+                loveList.add(userID.getId());
             } else {
-                loveList.remove(userID.getEmail());
+                loveList.remove(userID.getId());
             }
             targetPost.setLike(loveList);
             postRepo.save(targetPost);
@@ -152,12 +165,12 @@ public class PostService {
         }
     }
 
-    public ResponseObj updatePostByShare(UserEmailDTO postId, UserEmailDTO userID) {
+    public ResponseObj updatePostByShare(UserIDDTO postId,UserIDDTO userID) {
         ResponseObj responseObj = new ResponseObj();
-        Optional<PostEntity> optPost = postRepo.findById(postId.getEmail());
+        Optional<PostEntity> optPost = postRepo.findById(postId.getId());
         if (optPost.isEmpty()) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("cannot find post id: " + postId.getEmail());
+            responseObj.setMessage("cannot find post id: " + postId.getId());
             responseObj.setPayload(null);
             return responseObj;
         } else {
@@ -167,11 +180,11 @@ public class PostService {
                 shareList = new ArrayList<>();
             }
             // save id of user who shared the post then update post
-            shareList.add(userID.getEmail());
+            shareList.add(userID.getId());
             targetPost.setShare(shareList);
             postRepo.save(targetPost);
             // update post list of user who shared the post
-            targetPost.setUserId(userID.getEmail());
+            targetPost.setUserId(userID.getId());
             targetPost.setId(null);
             targetPost.setContent("Shared a post: " + targetPost.getContent());
             targetPost.setLike(new ArrayList<>());

@@ -66,6 +66,7 @@ public class UserController {
             System.out.println(inputUser.getEmail());
             System.out.println(inputUser.getPassword());
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputUser.getEmail(), inputUser.getPassword()));
+
             String token = jwtUtil.generateToken(inputUser.getEmail());
             Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getEmail());
             UserEntity user = optUser.get();

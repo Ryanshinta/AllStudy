@@ -58,17 +58,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(secFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors().configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                        CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedHeaders(Collections.singletonList("*"));
-                        config.setAllowedMethods(Collections.singletonList("*"));
-                        config.addAllowedOriginPattern("*");
-                        config.setAllowCredentials(true);
-                        return config;
-                    }
-                });
+        .cors().configurationSource(new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedHeaders(Collections.singletonList("*"));
+                config.setAllowedMethods(Collections.singletonList("*"));
+                config.addAllowedOriginPattern("*");
+                config.setAllowCredentials(true);
+                return config;
+            }
+        });
     }
 
 }
