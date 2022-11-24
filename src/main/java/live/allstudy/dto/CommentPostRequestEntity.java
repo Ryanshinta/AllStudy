@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentPostRequestEntity {
     private CommentEntity commentEntity;
-    private UserIDDTO postId;
+    private UserEmailDTO postId;
 }
