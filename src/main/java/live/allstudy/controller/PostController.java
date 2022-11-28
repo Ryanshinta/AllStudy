@@ -1,6 +1,7 @@
 package live.allstudy.controller;
 
 
+import live.allstudy.dto.UserEmailDTO;
 import live.allstudy.dto.UserIDDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.service.PostService;
@@ -39,12 +40,12 @@ public class PostController {
     }
 
     @PostMapping("/likePost")
-    public ResponseEntity<ResponseObj> lovePost(@RequestBody UserIDDTO postId,@RequestBody UserIDDTO userID) {
+    public ResponseEntity<ResponseObj> lovePost(@RequestBody UserIDDTO postId, @RequestBody UserIDDTO userID) {
         return new ResponseEntity<ResponseObj>(postService.updatePostByLike(postId,userID), HttpStatus.OK);
     }
 
     @PostMapping("/sharePost")
-    public ResponseEntity<ResponseObj> sharePost(@RequestBody UserIDDTO postId,@RequestBody UserIDDTO userID) {
+    public ResponseEntity<ResponseObj> sharePost(@RequestBody UserIDDTO postId, @RequestBody UserIDDTO userID) {
         return new ResponseEntity<ResponseObj>(postService.updatePostByShare(postId,userID), HttpStatus.OK);
     }
 }

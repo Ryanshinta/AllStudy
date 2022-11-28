@@ -1,8 +1,9 @@
 package live.allstudy.controller;
 
-import live.allstudy.dto.UserIDDTO;
+import live.allstudy.dto.UserEmailDTO;
 import live.allstudy.dto.UserSignInDTO;
 import live.allstudy.entity.AuthorizedEntity;
+import live.allstudy.entity.PartnerEntity;
 import live.allstudy.entity.UserEntity;
 import live.allstudy.service.UserService;
 import live.allstudy.util.JWTUtil;
@@ -20,6 +21,7 @@ import java.security.Principal;
 import java.util.Optional;
 
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -43,8 +45,8 @@ public class UserController {
     }
 
     @PostMapping("/users/profile")
-    public ResponseEntity<ResponseObj> findById(@RequestBody UserIDDTO inputId) {
-        return new ResponseEntity<ResponseObj>(userService.findById(inputId.getId()), HttpStatus.OK);
+    public ResponseEntity<ResponseObj> findById(@RequestBody UserEmailDTO inputEmail) {
+        return new ResponseEntity<ResponseObj>(userService.findByEmail(inputEmail.getEmail()), HttpStatus.OK);
     }
 
 
@@ -53,13 +55,19 @@ public class UserController {
         return new ResponseEntity<ResponseObj>(userService.saveUser(inputUser), HttpStatus.OK);
     }
 
+    @PutMapping("/users/update")
+    public ResponseEntity<ResponseObj> update(@RequestBody UserEntity inputUser) {
+        return new ResponseEntity<ResponseObj>(userService.update(inputUser), HttpStatus.OK);
+    }
+
     @PostMapping("/users/signin")
     public ResponseEntity<ResponseObj> userSignIn(@RequestBody UserSignInDTO inputUser) {
         try {
+            System.out.println(inputUser.getEmail());
+            System.out.println(inputUser.getPassword());
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(inputUser.getEmail(), inputUser.getPassword()));
 
             String token = jwtUtil.generateToken(inputUser.getEmail());
-
             Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getEmail());
             UserEntity user = optUser.get();
             user.setPassword("");
@@ -76,28 +84,23 @@ public class UserController {
     }
 
 
-    @PostMapping("/users/follow")
-    public ResponseEntity<ResponseObj> followUser(@RequestBody UserIDDTO user1,@RequestBody UserIDDTO user2) {
-        return new ResponseEntity<ResponseObj>(userService.followUser(user1,user2), HttpStatus.OK);
-    }
+//    @PostMapping("/users/follow")
+//    public ResponseEntity<ResponseObj> followUser(@RequestBody PartnerEntity partnerEmail) {
+//        return new ResponseEntity<ResponseObj>(userService.followUser(partnerEmail), HttpStatus.OK);
+//    }
 
     @PostMapping("/users/unfollow")
-    public ResponseEntity<ResponseObj> unfollowUser(@RequestBody UserIDDTO user1,@RequestBody UserIDDTO user2) {
-        return new ResponseEntity<ResponseObj>(userService.unfollowUser(user1,user2), HttpStatus.OK);
+    public ResponseEntity<ResponseObj> unfollowUser(@RequestBody PartnerEntity partnerEmail) {
+        return new ResponseEntity<ResponseObj>(userService.unfollowUser(partnerEmail), HttpStatus.OK);
     }
 
-    @PostMapping("/users/getfollowing")
-    public ResponseEntity<ResponseObj> findFollowing(@RequestBody UserIDDTO inputId) {
-        return new ResponseEntity<ResponseObj>(userService.findFollowing(inputId.getId()), HttpStatus.OK);
+    @PostMapping("/users/getFollowing")
+    public ResponseEntity<ResponseObj> findFollowing(@RequestBody UserEmailDTO inputId) {
+        return new ResponseEntity<ResponseObj>(userService.findFollowing(inputId.getEmail()), HttpStatus.OK);
     }
 
-    @PostMapping("/users/getfollower")
-    public ResponseEntity<ResponseObj> findFollower(@RequestBody UserIDDTO inputId) {
-        return new ResponseEntity<ResponseObj>(userService.findFollower(inputId.getId()), HttpStatus.OK);
-    }
-
-    @PutMapping("/users/update")
-    public ResponseEntity<ResponseObj> update(@RequestBody UserEntity inputUser) {
-        return new ResponseEntity<ResponseObj>(userService.update(inputUser), HttpStatus.OK);
+    @PostMapping("/users/getFollower")
+    public ResponseEntity<ResponseObj> findFollower(@RequestBody UserEmailDTO inputId) {
+        return new ResponseEntity<ResponseObj>(userService.findFollower(inputId.getEmail()), HttpStatus.OK);
     }
 }

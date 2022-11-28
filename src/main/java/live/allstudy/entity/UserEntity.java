@@ -17,15 +17,25 @@ public class UserEntity {
     @Id
     private String id;
 
+    private String username;
+
     private String firstName;
 
     private String lastName;
+
+    private String phone;
+
+    private String gender;
 
     private String email;
 
     private String password;
 
     private String role;
+
+    public void setUsername(String username) {
+        this.username = lastName + " " + firstName;
+    }
 
     List<String> following = new ArrayList<>();
 

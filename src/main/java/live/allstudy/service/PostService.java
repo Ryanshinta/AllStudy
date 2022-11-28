@@ -1,14 +1,13 @@
 package live.allstudy.service;
 
 import live.allstudy.dto.PostByFollowing;
+import live.allstudy.dto.UserEmailDTO;
 import live.allstudy.dto.UserIDDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.entity.UserEntity;
 import live.allstudy.repository.PostRepository;
 import live.allstudy.repository.UserRepository;
 import live.allstudy.util.ResponseObj;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
