@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,13 +21,9 @@ public class SpringDataTest {
 
     @Test
     void contextLoads() {
-        try {
-            Optional<List<PostEntity>> byUserId = postRepository.findAllByOrderByIdAsc();
-            List<PostEntity> postEntities = byUserId.get();
-            System.out.println(postEntities.toString());
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
+//        String date = "Sat Nov 26 2022 21:31:45 GMT+0800 (Malaysia Time)";
+//        DateTimeFormatter f =
+//        System.out.println(date.);
 
     }
 }

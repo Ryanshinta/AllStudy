@@ -181,7 +181,6 @@ public class UserService implements UserDetailsService {
             responseObj.setStatus("fail");
             responseObj.setMessage("user id: " + inputUser.getId() + " not existed");
             responseObj.setPayload(null);
-            return responseObj;
         } else {
             UserEntity currentUser = optUser.get();
             if (bCryptEncoder.matches(inputUser.getPassword(), currentUser.getPassword())) {
@@ -189,14 +188,13 @@ public class UserService implements UserDetailsService {
                 responseObj.setPayload(userRepo.save(inputUser));
                 responseObj.setStatus("success");
                 responseObj.setMessage("success");
-                return responseObj;
             } else {
                 responseObj.setStatus("fail");
                 responseObj.setMessage("current password is not correct");
                 responseObj.setPayload(null);
-                return responseObj;
             }
         }
+        return responseObj;
     }
 
     public ResponseObj followUser(UserIDDTO user1, UserIDDTO user2) {

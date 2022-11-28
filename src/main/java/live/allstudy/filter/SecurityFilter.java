@@ -1,5 +1,6 @@
 package live.allstudy.filter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import live.allstudy.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +25,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ExpiredJwtException {
         // read token from authorization header
         String token = request.getHeader("Authorization");
         if (token != null) {
