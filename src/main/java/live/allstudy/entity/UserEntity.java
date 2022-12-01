@@ -31,6 +31,8 @@ public class UserEntity {
 
     private String password;
 
+    private String profile;
+
     private String role;
 
     public void setUsername(String username) {

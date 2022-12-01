@@ -146,6 +146,7 @@ public class UserService implements UserDetailsService {
             UserEntity currentUser = optUser.get();
             if (bCryptEncoder.matches(inputUser.getPassword(), currentUser.getPassword())) {
                 userRepo.deleteById(currentUser.getId());
+                inputUser.setUsername(inputUser.getLastName() + " " + inputUser.getFirstName());
                 inputUser.setPassword(bCryptEncoder.encode(inputUser.getPassword()));
                 responseObj.setPayload(userRepo.save(inputUser));
                 responseObj.setStatus("success");
