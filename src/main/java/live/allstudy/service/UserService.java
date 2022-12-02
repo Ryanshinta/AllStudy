@@ -11,6 +11,8 @@ import live.allstudy.repository.UserRepository;
 import live.allstudy.util.ResponseObj;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 
@@ -27,6 +30,9 @@ import java.util.*;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private JavaMailSender emailSender;
 
     @Autowired
     private RequestRepository requestRepo;
@@ -101,6 +107,50 @@ public class UserService implements UserDetailsService {
             responseObj.setPayload(optUser.get());
             responseObj.setStatus("success");
             responseObj.setMessage("success");
+        }
+        return responseObj;
+    }
+
+    public ResponseObj resetPassword(UserEntity input){
+        ResponseObj responseObj = new ResponseObj();
+        Optional<UserEntity> optToken = userRepo.findByResetPasswordToken(input.getResetPasswordToken());
+        if(optToken.isPresent()){
+            UserEntity current = optToken.get();
+            UserEntity user = optToken.get();
+            user.setPassword(bCryptEncoder.encode(input.getPassword()));
+            userRepo.deleteById(current.getId());
+            userRepo.save(user);
+            responseObj.setStatus("success");
+            responseObj.setMessage(input.getPassword());
+        }else {
+            responseObj.setStatus("fail");
+            responseObj.setMessage(input.getPassword());
+        }
+        return responseObj;
+    }
+
+    public ResponseObj sendResetEmail(UserEmailDTO inputUser, HttpServletRequest request){
+        ResponseObj responseObj = new ResponseObj();
+        Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getEmail());
+        if(optUser.isPresent()){
+            UserEntity current = optUser.get();
+            UserEntity user = optUser.get();
+            user.setResetPasswordToken(UUID.randomUUID().toString());
+            userRepo.deleteById(current.getId());
+            userRepo.save(user);
+
+            String appUrl = request.getScheme() + "://" + request.getServerName() + ":3000/#";
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("0112testing@gmail.com");
+            message.setTo(inputUser.getEmail());
+            message.setSubject("Recovery Password");
+            message.setText("To reset your password, click the link below:\n" + appUrl
+                    + "/ResetPassword?token=" + user.getResetPasswordToken());
+            emailSender.send(message);
+            responseObj.setStatus("success");
+        }else {
+            responseObj.setStatus("fail");
         }
         return responseObj;
     }
