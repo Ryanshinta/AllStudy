@@ -63,6 +63,11 @@ public class EventCalenderController {
         eventCalenderEntity.setStart(updateEventDTO.getStart());
         eventCalenderEntity.setEnd(updateEventDTO.getEnd());
         eventCalenderEntity.setTitle(updateEventDTO.getTitle());
+        eventCalenderEntity.setTextColor(updateEventDTO.getTextColor());
+        eventCalenderEntity.setBackgroundColor(updateEventDTO.getBackgroundColor());
+
+
+        System.out.println(eventCalenderEntity.toString());
 
         return new ResponseEntity<ResponseObj>(eventCalenderService.updateEvent(eventCalenderEntity), HttpStatus.OK);
     }

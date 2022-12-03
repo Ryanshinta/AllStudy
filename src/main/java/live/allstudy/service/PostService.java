@@ -28,7 +28,12 @@ public class PostService {
     public ResponseObj getAllPost(){
         ResponseObj responseObj = new ResponseObj();
         Optional<List<PostEntity>> allPostOpt = postRepo.findAllByOrderByIdAsc();
+        List<UserEntity> allUser = userRepo.findAll();
         List<PostEntity> allPosts = allPostOpt.get();
+
+        for (PostEntity post : allPosts){
+            List<String> followingIds = new ArrayList<>();
+        }
         responseObj.setStatus("success");
         responseObj.setMessage("success");
         responseObj.setPayload(allPosts);

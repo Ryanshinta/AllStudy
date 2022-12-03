@@ -111,6 +111,21 @@ public class UserService implements UserDetailsService {
         return responseObj;
     }
 
+    public ResponseObj findByUserId(String id) {
+        ResponseObj responseObj = new ResponseObj();
+        Optional<UserEntity> optUser = userRepo.findById(id);
+        if (optUser.isEmpty()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("user email: " + id + " not existed");
+            responseObj.setPayload(null);
+        } else {
+            responseObj.setPayload(optUser.get());
+            responseObj.setStatus("success");
+            responseObj.setMessage("success");
+        }
+        return responseObj;
+    }
+
     public ResponseObj resetPassword(UserEntity input){
         ResponseObj responseObj = new ResponseObj();
         Optional<UserEntity> optToken = userRepo.findByResetPasswordToken(input.getResetPasswordToken());

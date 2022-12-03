@@ -84,20 +84,12 @@ public class EventCalenderService {
             return responseObj;
         }else {
             EventCalenderEntity entity = eventEntity.get();
-            if (!inputEvent.getTitle().isEmpty()){
-                entity.setTitle(inputEvent.getTitle());
-            }
-            if (inputEvent.getStart() != null){
-                entity.setStart(inputEvent.getStart());
-            }
-
-            if (inputEvent.getEnd() != null){
-                entity.setEnd(inputEvent.getEnd());
-            }
+            inputEvent.setId(entity.getId());
+            inputEvent.setUserId(entity.getUserId());
 
             responseObj.setStatus("success");
             responseObj.setMessage("success");
-            responseObj.setPayload(eventCalenderRepository.save(entity));
+            responseObj.setPayload(eventCalenderRepository.save(inputEvent));
         }
         return responseObj;
     }

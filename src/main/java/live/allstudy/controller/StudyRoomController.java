@@ -3,6 +3,7 @@ package live.allstudy.controller;
 
 
 import io.openvidu.java.client.*;
+import live.allstudy.dto.SessionIdDTO;
 import live.allstudy.dto.VideoRoomDTO;
 import live.allstudy.entity.StudyRoomEntity;
 import live.allstudy.repository.StudyRoomRepository;
@@ -53,16 +54,22 @@ public class StudyRoomController {
         Map<String, String> params = new HashMap<>(1);
         params.put("customSessionId",roomInfo.getSessionId());
         SessionProperties properties = SessionProperties.fromJson(params).build();
+
+        List<StudyRoomEntity> curSession = roomRepository.findBySessionID(roomInfo.getSessionId());
         Session session = openVidu.createSession(properties);
-        StudyRoomEntity studyRoom = new StudyRoomEntity();
 
-        studyRoom.setSessionID(session.getSessionId());
-        studyRoom.setRoomName(roomInfo.getRoomName());
-        studyRoom.setCreatedAt(Instant.now());
-        studyRoom.setRoomDesc(roomInfo.getRoomDesc());
-        roomRepository.save(studyRoom);
+        if (curSession.isEmpty()){
+            StudyRoomEntity studyRoom = new StudyRoomEntity();
+            studyRoom.setSessionID(session.getSessionId());
+            studyRoom.setRoomName(roomInfo.getRoomName());
+            studyRoom.setCreatedAt(Instant.now());
+            studyRoom.setRoomDesc(roomInfo.getRoomDesc());
+            roomRepository.save(studyRoom);
+            return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+
+        return new ResponseEntity<>(curSession.get(0).getSessionID(), HttpStatus.OK);
     }
 
     @PostMapping("/sessions/{sessionId}/connections")
@@ -73,6 +80,8 @@ public class StudyRoomController {
         if (session == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+
 
         ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
         Connection connection = session.createConnection(properties);
@@ -90,7 +99,34 @@ public class StudyRoomController {
         responseObj.setMessage("success");
         responseObj.setStatus("success");
         responseObj.setPayload(rooms);
-
         return new ResponseEntity<>(responseObj,HttpStatus.OK);
+    }
+
+    @PostMapping("/getNumberOfUserInTheRoom")
+    public ResponseEntity<ResponseObj> getNumberOfUserInTheRoom(@RequestBody SessionIdDTO sessionId) throws OpenViduJavaClientException, OpenViduHttpException{
+
+        openVidu.fetch();
+        List<Session> activeSessions = openVidu.getActiveSessions();
+        Session currSession = null;
+        ResponseObj responseObj = new ResponseObj();
+        for (Session session: activeSessions ){
+            if (session.getSessionId().equals(session.getSessionId())){
+                currSession = session;
+            }
+        }
+        if (currSession != null){
+            List<Connection> activeConnections = currSession.getActiveConnections();
+            responseObj.setStatus("success");
+            responseObj.setMessage("success");
+            responseObj.setPayload(activeConnections.size());
+            return new ResponseEntity<>(responseObj,HttpStatus.OK);
+        }
+
+        responseObj.setStatus("fail");
+        responseObj.setMessage("cannot find any session from id: "+sessionId.getSessionId());
+        responseObj.setPayload(null);
+        return new ResponseEntity<>(responseObj,HttpStatus.NOT_FOUND);
+
+
     }
 }

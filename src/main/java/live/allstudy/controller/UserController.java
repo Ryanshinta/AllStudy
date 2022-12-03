@@ -1,6 +1,7 @@
 package live.allstudy.controller;
 
 import live.allstudy.dto.UserEmailDTO;
+import live.allstudy.dto.UserIDDTO;
 import live.allstudy.dto.UserSignInDTO;
 import live.allstudy.entity.AuthorizedEntity;
 import live.allstudy.entity.PartnerEntity;
@@ -45,8 +46,13 @@ public class UserController {
     }
 
     @PostMapping("/users/profile")
-    public ResponseEntity<ResponseObj> findById(@RequestBody UserEmailDTO inputEmail) {
+    public ResponseEntity<ResponseObj> findByEmail(@RequestBody UserEmailDTO inputEmail) {
         return new ResponseEntity<ResponseObj>(userService.findByEmail(inputEmail.getEmail()), HttpStatus.OK);
+    }
+
+    @PostMapping("/users/profilePhoto")
+    public ResponseEntity<ResponseObj> findByUserId(@RequestBody UserIDDTO userIDDTO) {
+        return new ResponseEntity<ResponseObj>(userService.findByUserId(userIDDTO.getId()), HttpStatus.OK);
     }
 
 

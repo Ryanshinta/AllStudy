@@ -21,7 +21,8 @@ public class StudyRoomEntity {
     private String roomName;
 
     private String roomDesc;
-    //private UserEntity host;
+
+    private String password;
 
     List<String> userInRoom = new ArrayList<>();
 

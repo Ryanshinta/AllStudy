@@ -18,5 +18,9 @@ public class updateEventDTO {
 
     private Instant start;
 
+    private String backgroundColor;
+
+    private String textColor;
+
     private Instant end;
 }
