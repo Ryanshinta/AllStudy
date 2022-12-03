@@ -52,7 +52,9 @@ public class UserController {
 
     @PostMapping("/users/profilePhoto")
     public ResponseEntity<ResponseObj> findByUserId(@RequestBody UserIDDTO userIDDTO) {
-        return new ResponseEntity<ResponseObj>(userService.findByUserId(userIDDTO.getId()), HttpStatus.OK);
+        return new ResponseEntity<ResponseObj>(
+                userService.findByUserId(userIDDTO.getId()), HttpStatus.OK
+        );
     }
 
 

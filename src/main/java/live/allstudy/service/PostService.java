@@ -25,15 +25,29 @@ public class PostService {
     @Autowired
     private UserRepository userRepo;
 
+
+    public ResponseObj deletePostById(String id){
+        System.out.println(id);
+        ResponseObj responseObj = new ResponseObj();
+        Optional<PostEntity> post = postRepo.findById(id);
+        if (post.isEmpty()){
+            responseObj.setStatus("fail");
+            responseObj.setMessage("cannot find post id: " + id);
+            responseObj.setPayload(null);
+            return responseObj;
+        }else {
+            postRepo.deleteById(id);
+            responseObj.setStatus("success");
+            responseObj.setMessage("success");
+            responseObj.setPayload(null);
+        }
+        return responseObj;
+    }
+
     public ResponseObj getAllPost(){
         ResponseObj responseObj = new ResponseObj();
-        Optional<List<PostEntity>> allPostOpt = postRepo.findAllByOrderByIdAsc();
-        List<UserEntity> allUser = userRepo.findAll();
+        Optional<List<PostEntity>> allPostOpt = postRepo.findAllByOrderByCreatedAtDesc();
         List<PostEntity> allPosts = allPostOpt.get();
-
-        for (PostEntity post : allPosts){
-            List<String> followingIds = new ArrayList<>();
-        }
         responseObj.setStatus("success");
         responseObj.setMessage("success");
         responseObj.setPayload(allPosts);
@@ -49,20 +63,50 @@ public class PostService {
         return responseObj;
     }
 
-    public ResponseObj findPostByUserId(UserIDDTO inputUserId) {
+    public ResponseObj findFollowingPostById(UserIDDTO inputUserId) {
         ResponseObj responseObj = new ResponseObj();
-        Optional<List<PostEntity>> userPostsOpt = postRepo.findByUserIdOrderByCreatedAtDesc(inputUserId.getId());
-        if (userPostsOpt.isEmpty()) {
+        Optional<UserEntity> optUser = userRepo.findById(inputUserId.getId());
+        if (optUser.isEmpty()) {
             responseObj.setStatus("fail");
             responseObj.setMessage("cannot find any post from user id: " + inputUserId.getId());
             responseObj.setPayload(null);
             return responseObj;
         } else {
-            List<PostEntity> userPosts = userPostsOpt.get();
-            responseObj.setStatus("success");
-            responseObj.setMessage("success");
-            responseObj.setPayload(userPosts);
-            return responseObj;
+            UserEntity user = optUser.get();
+            if (user.getFollowing() != null) {
+                // if user followed someone, get their emails
+                List<String> followingEmails = new ArrayList<>(user.getFollowing());
+
+                // based on these emails, get their equivalent posts
+                List<PostEntity> listPosts = new ArrayList<>();
+                for (String followingEmail : followingEmails) {
+                    // get following user info based on Id
+                    UserEntity followingUser = new UserEntity();
+                    Optional<UserEntity> optFollowingUser = userRepo.findByEmail(followingEmail);
+                    if (optFollowingUser.isPresent()) {
+                        followingUser = optFollowingUser.get();
+                    }
+
+
+                    // get equivalent posts
+                    Optional<List<PostEntity>> followingPostsOpt = postRepo.findByUserIdOrderByCreatedAtDesc(followingUser.getId());
+
+                    if (followingPostsOpt.isPresent()) {
+                        // if followed account has any post, collect them
+                        List<PostEntity> followingPosts = followingPostsOpt.get();
+                        listPosts.addAll(followingPosts);
+                    }
+                }
+                responseObj.setStatus("success");
+                responseObj.setMessage("success");
+                responseObj.setPayload(listPosts);
+                return responseObj;
+            } else {
+                responseObj.setStatus("fail");
+                responseObj.setMessage("user id: " + inputUserId.getId() + " has empty following list");
+                responseObj.setPayload(null);
+                return responseObj;
+            }
         }
     }
 
@@ -79,16 +123,16 @@ public class PostService {
             UserEntity user = optUser.get();
             if (user.getFollowing() != null) {
                 // if user followed someone, get their ids
-                List<String> followingIds = new ArrayList<>();
-                for (String id : user.getFollowing()) {
-                    followingIds.add(id);
+                List<String> followingEmails = new ArrayList<>();
+                for (String email : user.getFollowing()) {
+                    followingEmails.add(email);
                 }
                 // based on these ids, get their equivalent posts
                 List<PostByFollowing> listPosts = new ArrayList<>();
-                for (String followingId : followingIds) {
+                for (String followingEmail : followingEmails) {
                     // get following user info based on Id
                     UserEntity followingUser = new UserEntity();
-                    Optional<UserEntity> optFollowingUser = userRepo.findById(followingId);
+                    Optional<UserEntity> optFollowingUser = userRepo.findByEmail(followingEmail);
                     if (optFollowingUser.isPresent()) {
                         followingUser = optFollowingUser.get();
                     }
@@ -96,7 +140,8 @@ public class PostService {
                     followingUser.setPassword("");
 
                     // get equivalent posts
-                    Optional<List<PostEntity>> followingPostsOpt = postRepo.findByUserId(followingId);
+                    Optional<List<PostEntity>> followingPostsOpt = postRepo.findByUserId(followingUser.getId());
+
                     if (followingPostsOpt.isPresent()) {
                         // if followed account has any post, collect them
                         List<PostEntity> followingPosts = followingPostsOpt.get();
@@ -120,6 +165,25 @@ public class PostService {
             }
         }
     }
+
+
+    public ResponseObj findPostByUserId(UserIDDTO inputUserId) {
+        ResponseObj responseObj = new ResponseObj();
+        Optional<List<PostEntity>> userPostsOpt = postRepo.findByUserIdOrderByCreatedAtDesc(inputUserId.getId());
+        if (userPostsOpt.isEmpty()) {
+            responseObj.setStatus("fail");
+            responseObj.setMessage("cannot find any post from user id: " + inputUserId.getId());
+            responseObj.setPayload(null);
+            return responseObj;
+        } else {
+            List<PostEntity> userPosts = userPostsOpt.get();
+            responseObj.setStatus("success");
+            responseObj.setMessage("success");
+            responseObj.setPayload(userPosts);
+            return responseObj;
+        }
+    }
+
 
     public ResponseObj updatePostByComment(PostEntity inputPost) {
         ResponseObj responseObj = new ResponseObj();

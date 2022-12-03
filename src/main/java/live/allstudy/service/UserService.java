@@ -112,11 +112,11 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseObj findByUserId(String id) {
-        ResponseObj responseObj = new ResponseObj();
+        ResponseObj responseObj = new ResponseObj();;
         Optional<UserEntity> optUser = userRepo.findById(id);
         if (optUser.isEmpty()) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("user email: " + id + " not existed");
+            responseObj.setMessage("user Id: " + id + " not existed");
             responseObj.setPayload(null);
         } else {
             responseObj.setPayload(optUser.get());

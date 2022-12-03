@@ -24,16 +24,26 @@ public class PostController {
         return new ResponseEntity<ResponseObj>(postService.getAllPost(),HttpStatus.OK);
     }
 
+
+    @PostMapping("/deletePostById")
+    public ResponseEntity<ResponseObj> deletePost(@RequestBody UserIDDTO id){
+        return new ResponseEntity<ResponseObj>(postService.deletePostById(id.getId()),HttpStatus.OK);
+    }
+
     @PostMapping("/insertPost")
     public ResponseEntity<ResponseObj> insertPost(@RequestBody PostEntity inputPost) {
         return new ResponseEntity<ResponseObj>(postService.insertPost(inputPost), HttpStatus.OK);
     }
 
-    @GetMapping("/myPosts")
+    @PostMapping("/followingPostsById")
     public ResponseEntity<ResponseObj> findPostByUserId(@RequestBody UserIDDTO inputUserId) {
-        return new ResponseEntity<ResponseObj>(postService.findPostByUserId(inputUserId), HttpStatus.OK);
+         return new ResponseEntity<ResponseObj>(postService.findFollowingPostById(inputUserId),HttpStatus.OK);
     }
 
+    @PostMapping("/myPost")
+    public ResponseEntity<ResponseObj> findMyPost(@RequestBody UserIDDTO inputUserId) {
+        return new ResponseEntity<ResponseObj>(postService.findPostByUserId(inputUserId), HttpStatus.OK);
+    }
     @PostMapping("/followingPosts")
     public ResponseEntity<ResponseObj> findPostByFollowing(@RequestBody UserIDDTO inputUserId) {
         return new ResponseEntity<ResponseObj>(postService.findPostByFollowing(inputUserId), HttpStatus.OK);

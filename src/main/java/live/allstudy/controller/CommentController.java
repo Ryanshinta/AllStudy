@@ -2,6 +2,7 @@ package live.allstudy.controller;
 
 import live.allstudy.dto.CommentPostRequestEntity;
 import live.allstudy.dto.UserEmailDTO;
+import live.allstudy.dto.postIdDTO;
 import live.allstudy.entity.CommentEntity;
 import live.allstudy.service.CommentService;
 import live.allstudy.util.ResponseObj;
@@ -22,8 +23,8 @@ public class CommentController {
     @PostMapping("/insertComment")
     public ResponseEntity<ResponseObj> insertComment(@RequestBody CommentPostRequestEntity postedComment) {
         CommentEntity inputComment = postedComment.getCommentEntity();
-        UserEmailDTO inputPostId = postedComment.getPostId();
-        return new ResponseEntity<ResponseObj>(commentService.insertComment(inputComment, inputPostId.getEmail()), HttpStatus.OK);
+        postIdDTO inputPostId = postedComment.getPostId();
+        return new ResponseEntity<ResponseObj>(commentService.insertComment(inputComment, inputPostId.getId()), HttpStatus.OK);
     }
 
     @PostMapping("/getComments")
