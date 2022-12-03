@@ -58,7 +58,7 @@ public class StudyRoomController {
         List<StudyRoomEntity> curSession = roomRepository.findBySessionID(roomInfo.getSessionId());
         Session session = openVidu.createSession(properties);
 
-        if (curSession.isEmpty()){
+        if (curSession.isEmpty() && !roomInfo.getIsPublic()){
             StudyRoomEntity studyRoom = new StudyRoomEntity();
             studyRoom.setSessionID(session.getSessionId());
             studyRoom.setRoomName(roomInfo.getRoomName());
@@ -69,7 +69,7 @@ public class StudyRoomController {
         }
 
 
-        return new ResponseEntity<>(curSession.get(0).getSessionID(), HttpStatus.OK);
+        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
     }
 
     @PostMapping("/sessions/{sessionId}/connections")

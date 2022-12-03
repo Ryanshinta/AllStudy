@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class postIdDTO {
-    private String id;
+    private String postId;
 }

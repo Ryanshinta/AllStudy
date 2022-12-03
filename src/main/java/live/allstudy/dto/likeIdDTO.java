@@ -1,6 +1,5 @@
 package live.allstudy.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VideoRoomDTO {
-    String sessionId;
-    String roomName;
-    String roomDesc;
-    String password;
-    Boolean isPublic;
+public class likeIdDTO {
+    String userID;
+    String postID;
 }

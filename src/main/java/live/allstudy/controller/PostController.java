@@ -3,6 +3,8 @@ package live.allstudy.controller;
 
 import live.allstudy.dto.UserEmailDTO;
 import live.allstudy.dto.UserIDDTO;
+import live.allstudy.dto.likeIdDTO;
+import live.allstudy.dto.postIdDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.service.PostService;
 import live.allstudy.util.ResponseObj;
@@ -50,8 +52,8 @@ public class PostController {
     }
 
     @PostMapping("/likePost")
-    public ResponseEntity<ResponseObj> lovePost(@RequestBody UserIDDTO postId, @RequestBody UserIDDTO userID) {
-        return new ResponseEntity<ResponseObj>(postService.updatePostByLike(postId,userID), HttpStatus.OK);
+    public ResponseEntity<ResponseObj> lovePost(@RequestBody likeIdDTO likeIdDTO) {
+        return new ResponseEntity<ResponseObj>(postService.updatePostByLike(likeIdDTO.getPostID(),likeIdDTO.getUserID()), HttpStatus.OK);
     }
 
     @PostMapping("/sharePost")

@@ -3,6 +3,7 @@ package live.allstudy.service;
 import live.allstudy.dto.PostByFollowing;
 import live.allstudy.dto.UserEmailDTO;
 import live.allstudy.dto.UserIDDTO;
+import live.allstudy.dto.postIdDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.entity.UserEntity;
 import live.allstudy.repository.PostRepository;
@@ -203,13 +204,13 @@ public class PostService {
         }
     }
 
-    public ResponseObj updatePostByLike(UserIDDTO postId,UserIDDTO userID) {
+    public ResponseObj updatePostByLike(String postId, String userID) {
         // id 1 - post Id, id 2 - user who liked post
         ResponseObj responseObj = new ResponseObj();
-        Optional<PostEntity> optPost = postRepo.findById(postId.getId());
+        Optional<PostEntity> optPost = postRepo.findById(postId);
         if (optPost.isEmpty()) {
             responseObj.setStatus("fail");
-            responseObj.setMessage("cannot find post id: " + postId.getId());
+            responseObj.setMessage("cannot find post id: " + postId);
             responseObj.setPayload(null);
             return responseObj;
         } else {
@@ -219,10 +220,10 @@ public class PostService {
                 loveList = new ArrayList<>();
             }
             // love and unlove a post
-            if (!loveList.contains(userID.getId())) {
-                loveList.add(userID.getId());
+            if (!loveList.contains(userID)) {
+                loveList.add(userID);
             } else {
-                loveList.remove(userID.getId());
+                loveList.remove(userID);
             }
             targetPost.setLike(loveList);
             postRepo.save(targetPost);

@@ -1,16 +1,19 @@
 package live.allstudy.config;
 
 
+import live.allstudy.filter.LoginRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Properties;
 
 @Component
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer {
     @Bean
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
@@ -33,4 +36,10 @@ public class AppConfig {
 
         return mailSender;
     }
+
+
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry){
+//        registry.addInterceptor(new LoginRequestInterceptor()).addPathPatterns("/api/users/signin");
+//    }
 }
