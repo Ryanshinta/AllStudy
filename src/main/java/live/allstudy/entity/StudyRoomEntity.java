@@ -18,6 +18,10 @@ public class StudyRoomEntity {
     @Id
     private String sessionID;
 
+    private String userID;
+
+    private String userName;
+
     private String roomName;
 
     private String roomDesc;

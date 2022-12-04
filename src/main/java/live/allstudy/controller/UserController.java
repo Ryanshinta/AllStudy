@@ -6,6 +6,7 @@ import live.allstudy.dto.UserSignInDTO;
 import live.allstudy.entity.AuthorizedEntity;
 import live.allstudy.entity.PartnerEntity;
 import live.allstudy.entity.UserEntity;
+import live.allstudy.service.ReportService;
 import live.allstudy.service.UserService;
 import live.allstudy.util.JWTUtil;
 import live.allstudy.util.ResponseObj;
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private ReportService reportService ;
 
     @PostMapping("/users")
     public ResponseEntity<ResponseObj> findAllUsers() {
@@ -79,6 +83,9 @@ public class UserController {
             Optional<UserEntity> optUser = userRepo.findByEmail(inputUser.getEmail());
             UserEntity user = optUser.get();
             user.setPassword("");
+
+            reportService.increaseLogin(user.getId());
+
             return new ResponseEntity<ResponseObj>(new ResponseObj("success", "authenticated", new AuthorizedEntity(user, token)), HttpStatus.OK);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -99,6 +106,7 @@ public class UserController {
 
     @PostMapping("/users/unfollow")
     public ResponseEntity<ResponseObj> unfollowUser(@RequestBody PartnerEntity partnerEmail) {
+
         return new ResponseEntity<ResponseObj>(userService.unfollowUser(partnerEmail), HttpStatus.OK);
     }
 

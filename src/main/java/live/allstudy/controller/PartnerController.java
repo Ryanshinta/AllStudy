@@ -6,6 +6,7 @@ import live.allstudy.entity.PartnerRequestEntity;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.entity.UserEntity;
 import live.allstudy.service.PartnerService;
+import live.allstudy.service.ReportService;
 import live.allstudy.service.UserService;
 import live.allstudy.util.ResponseObj;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class PartnerController {
     @Autowired
     private UserService userService;
 
+    private ReportService reportService;
+
     @PostMapping("/partner")
     public ResponseEntity<ResponseObj> findAllRequest(){
         return new ResponseEntity<ResponseObj>(partnerService.findAll(), HttpStatus.OK);
@@ -40,6 +43,8 @@ public class PartnerController {
 
     @PostMapping("/partner/deleteRequest")
     public ResponseEntity<ResponseObj> deleteRequest(@RequestBody PartnerRequestEntity requestId){
+
+
         return new ResponseEntity<ResponseObj>(partnerService.deleteRequest(requestId), HttpStatus.OK);
     }
 
@@ -55,6 +60,8 @@ public class PartnerController {
 
     @PostMapping("/partner/approvedRequest")
     public ResponseEntity<ResponseObj> approvedRequest(@RequestBody PartnerRequestEntity requestId){
+
+
         return new ResponseEntity<ResponseObj>(partnerService.approvedRequest(requestId), HttpStatus.OK);
     }
 }

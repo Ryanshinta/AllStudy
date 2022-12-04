@@ -11,5 +11,5 @@ import java.util.List;
  */
 @Repository
 public interface StudyRoomRepository extends MongoRepository<StudyRoomEntity,String> {
-    List<StudyRoomEntity> findBySessionID(String sessionId);
+    StudyRoomEntity findBySessionID(String sessionId);
 }

@@ -3,11 +3,13 @@ package live.allstudy.controller;
 
 
 import io.openvidu.java.client.*;
+import live.allstudy.dto.PasswordDTO;
 import live.allstudy.dto.SessionIdDTO;
 import live.allstudy.dto.VideoRoomDTO;
 import live.allstudy.entity.StudyRoomEntity;
 import live.allstudy.repository.StudyRoomRepository;
 
+import live.allstudy.service.ReportService;
 import live.allstudy.util.ResponseObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,8 @@ import static io.openvidu.java.client.MediaMode.ROUTED;
 public class StudyRoomController {
 
 
+    @Autowired
+    ReportService reportService;
 
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -55,15 +59,29 @@ public class StudyRoomController {
         params.put("customSessionId",roomInfo.getSessionId());
         SessionProperties properties = SessionProperties.fromJson(params).build();
 
-        List<StudyRoomEntity> curSession = roomRepository.findBySessionID(roomInfo.getSessionId());
+        StudyRoomEntity curSession = roomRepository.findBySessionID(roomInfo.getSessionId());
         Session session = openVidu.createSession(properties);
 
-        if (curSession.isEmpty() && !roomInfo.getIsPublic()){
+
+        if (roomInfo.getIsPublic()){
+            reportService.increasePublicRoomJoin(roomInfo.getUserID());
+        }else {
+            reportService.increasePrivateRoomJoin(roomInfo.getUserID());
+        }
+
+        if (curSession == null && !roomInfo.getIsPublic()){
+
             StudyRoomEntity studyRoom = new StudyRoomEntity();
             studyRoom.setSessionID(session.getSessionId());
             studyRoom.setRoomName(roomInfo.getRoomName());
             studyRoom.setCreatedAt(Instant.now());
             studyRoom.setRoomDesc(roomInfo.getRoomDesc());
+            studyRoom.setUserID(roomInfo.getUserID());
+            studyRoom.setUserName(roomInfo.getUserName());
+            studyRoom.setPassword(roomInfo.getPassword());
+
+
+
             roomRepository.save(studyRoom);
             return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
         }
@@ -126,7 +144,30 @@ public class StudyRoomController {
         responseObj.setMessage("cannot find any session from id: "+sessionId.getSessionId());
         responseObj.setPayload(null);
         return new ResponseEntity<>(responseObj,HttpStatus.NOT_FOUND);
+    }
 
-
+    @PostMapping("/checkPassword")
+    public ResponseEntity<ResponseObj> checkRoomPassword(@RequestBody PasswordDTO password){
+        System.out.println("SessionID = "+password.getSessionId());
+        StudyRoomEntity sessionID = roomRepository.findBySessionID(password.getSessionId());
+        ResponseObj responseObj = new ResponseObj();
+        if (sessionID.getSessionID().isEmpty()){
+            responseObj.setStatus("fail");
+            responseObj.setMessage("cannot find any session from id: "+sessionID.getSessionID());
+            responseObj.setPayload(null);
+            return new ResponseEntity<>(responseObj,HttpStatus.NOT_FOUND);
+        }else {
+            if (sessionID.getPassword().equals(password.getPassword())){
+                responseObj.setStatus("success");
+                responseObj.setMessage("success");
+                responseObj.setPayload(null);
+                return new ResponseEntity<>(responseObj,HttpStatus.OK);
+            }else {
+                responseObj.setStatus("fail");
+                responseObj.setMessage("Password not correct");
+                responseObj.setPayload(null);
+                return new ResponseEntity<>(responseObj,HttpStatus.UNAUTHORIZED);
+            }
+        }
     }
 }

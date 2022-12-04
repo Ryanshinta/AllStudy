@@ -7,6 +7,7 @@ import live.allstudy.dto.likeIdDTO;
 import live.allstudy.dto.postIdDTO;
 import live.allstudy.entity.PostEntity;
 import live.allstudy.service.PostService;
+import live.allstudy.service.ReportService;
 import live.allstudy.util.ResponseObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     @Autowired
     private PostService postService;
+
+    private ReportService reportService;
+
 
     @GetMapping("/getAllPost")
     public ResponseEntity<ResponseObj> getAllPost(){
@@ -53,6 +57,7 @@ public class PostController {
 
     @PostMapping("/likePost")
     public ResponseEntity<ResponseObj> lovePost(@RequestBody likeIdDTO likeIdDTO) {
+
         return new ResponseEntity<ResponseObj>(postService.updatePostByLike(likeIdDTO.getPostID(),likeIdDTO.getUserID()), HttpStatus.OK);
     }
 
